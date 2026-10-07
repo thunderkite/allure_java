@@ -21,7 +21,13 @@ public class WidgetsPage extends BasePage {
 
     @Step("Установить значение слайдера")
     public void setSliderValue(String value) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", visible(slider), value);
+        ((JavascriptExecutor) driver).executeScript(
+            "const input = arguments[0];"
+                + "const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;"
+                + "setter.call(input, arguments[1]);"
+                + "input.dispatchEvent(new Event('input', { bubbles: true }));"
+                + "input.dispatchEvent(new Event('change', { bubbles: true }));",
+            visible(slider), value);
     }
 
     public String sliderValue() {
