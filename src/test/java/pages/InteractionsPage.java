@@ -30,9 +30,9 @@ public class InteractionsPage extends BasePage {
         int startX = 0;
         int startY = 0;
         int endX = targetElement.getLocation().getX() - sourceElement.getLocation().getX()
-            + targetElement.getSize().getWidth() / 2 - startX;
+            + (targetElement.getSize().getWidth() - sourceElement.getSize().getWidth()) / 2 - startX;
         int endY = targetElement.getLocation().getY() - sourceElement.getLocation().getY()
-            + targetElement.getSize().getHeight() / 2 - startY;
+            + (targetElement.getSize().getHeight() - sourceElement.getSize().getHeight()) / 2 - startY;
 
         Actions actions = new Actions(driver)
             .moveToElement(sourceElement, startX, startY)
