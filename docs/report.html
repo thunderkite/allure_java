@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Отчет по практическому занятию №14-16</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        html, body { background: #fff; color: #000; }
+        body { font-family: "Times New Roman", Times, serif; font-size: 14pt; line-height: 1.35; margin: 2cm; }
+        h1, h2, h3 { color: #000; font-weight: 700; }
+        h1 { font-size: 20pt; text-align: center; margin: 0 0 2em; }
+        h2 { font-size: 16pt; margin: 1.5em 0 .6em; page-break-after: avoid; }
+        h3 { font-size: 14pt; margin: 1.1em 0 .4em; page-break-after: avoid; }
+        p { margin: .45em 0; }
+        .title-page { min-height: 24cm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
+        .title-page .center { text-align: center; margin-top: 3cm; }
+        .title-page .details { margin: 2cm auto; width: 80%; }
+        .title-page .details p { margin: .8em 0; }
+        .title-page .date { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin: .8em 0 1em; page-break-inside: avoid; }
+        th, td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; }
+        th { font-weight: 700; text-align: left; }
+        code { font-family: "Courier New", monospace; font-size: 11pt; }
+        a { color: #000; text-decoration: underline; }
+        figure { margin: 1em 0 1.4em; page-break-inside: avoid; }
+        img { display: block; max-width: 100%; max-height: 18cm; border: 1px solid #000; }
+        figcaption { margin-top: .35em; font-style: italic; }
+        .small { font-size: 12pt; }
+        .page-break { page-break-before: always; }
+        ul { margin-top: .3em; }
+    </style>
+</head>
+<body>
+<section class="title-page">
+    <div class="center">
+        <p>Практическое занятие №14-16</p>
+        <h1>Отчет по UI-тестированию DemoQA<br>с использованием Page Object и Allure</h1>
+        <p>Дисциплина: автоматизация тестирования</p>
+    </div>
+    <div class="details">
+        <p>Группа: не указана в исходных данных</p>
+        <p>ФИО: не указано в исходных данных</p>
+        <p>Репозиторий: thunderkite/allure</p>
+        <p>Рабочая ветка: feature/student_demoqa_allure</p>
+    </div>
+    <p class="date">Дата: 07.10.2026</p>
+</section>
+
+<h2>1. Описание среды</h2>
+<table>
+    <tr><th>Компонент</th><th>Значение</th></tr>
+    <tr><td>Операционная система</td><td>Windows 11, версия ОС 10.0, архитектура amd64.</td></tr>
+    <tr><td>JDK</td><td>JDK 26.0.2.1. В проекте задан минимальный уровень компиляции Java 17.</td></tr>
+    <tr><td>Maven</td><td>Apache Maven Wrapper 3.9.9, запуск через <code>mvnw.cmd</code>.</td></tr>
+    <tr><td>Браузеры</td><td>Google Chrome 154.0.8037.98; Microsoft Edge 154.0.4258.53; Firefox в системе не обнаружен, поэтому Firefox-поток не может считаться воспроизведенным на данном компьютере.</td></tr>
+    <tr><td>Драйверы</td><td>Selenium Manager, встроенный в Selenium 4.22.0. Отдельное хранение chromedriver/geckodriver/msedgedriver в проекте не используется.</td></tr>
+    <tr><td>Selenium</td><td>Selenium Java 4.22.0.</td></tr>
+    <tr><td>TestNG</td><td>TestNG 7.10.2; Surefire 3.2.5.</td></tr>
+    <tr><td>Allure</td><td>Allure TestNG 2.25.0; Maven-плагин Allure 2.12.0, генератор отчета 2.20.1.</td></tr>
+    <tr><td>Режим запуска</td><td>Headless. В основном suite Chrome, Firefox и Edge запускаются параллельно: <code>parallel="tests"</code>, <code>thread-count="3"</code>.</td></tr>
+</table>
+<p>Таймаут ожиданий в <code>BaseTest</code> равен 15 секундам. Для действий используются явные ожидания Selenium: видимость элемента и кликабельность элемента. Неявные ожидания и <code>Thread.sleep</code> не применяются.</p>
+
+<h2>2. Перечень сценариев</h2>
+<table>
+    <tr><th>Сценарий и цель</th><th>Шаги</th><th>Ожидаемый результат</th></tr>
+    <tr><td>Text Box: валидная форма. Проверить отправку корректных данных.</td><td>Открыть <a href="https://demoqa.com/text-box">demoqa.com/text-box</a>; заполнить имя, email и адреса; нажать Submit.</td><td>На странице отображается блок <code>#output</code>.</td></tr>
+    <tr><td>Text Box: невалидный email. Проверить встроенную в браузер валидацию.</td><td>Открыть Text Box; ввести <code>not-an-email</code>; проверить свойство <code>validationMessage</code> поля email.</td><td>У поля <code>#userEmail</code> присутствует сообщение валидации.</td></tr>
+    <tr><td>Alerts: отмена confirm.</td><td>Открыть <a href="https://demoqa.com/alerts">страницу Alerts</a>; нажать confirm; дождаться alert; выполнить dismiss.</td><td><code>#confirmResult</code> содержит результат отмены.</td></tr>
+    <tr><td>Alerts: prompt с текстом.</td><td>Открыть Alerts; нажать prompt; дождаться alert; ввести <code>demo</code> и подтвердить.</td><td><code>#promptResult</code> содержит текст <code>demo</code>.</td></tr>
+    <tr><td>Slider: установить значение. Проверить изменение range input.</td><td>Открыть <a href="https://demoqa.com/slider">страницу Slider</a>; найти <code>input[type='range']</code>; задать значение 75 через JavaScript и отправить событие change.</td><td>Свойство <code>value</code> элемента <code>#sliderValue</code> равно 75.</td></tr>
+    <tr><td>Drag and Drop: переместить элемент.</td><td>Открыть <a href="https://demoqa.com/droppable">страницу Droppable</a>; найти источник <code>#draggable</code> и цель <code>#droppable</code>; выполнить Selenium Actions dragAndDrop.</td><td>Текст цели меняется на <code>Dropped!</code>.</td></tr>
+</table>
+
+<h3>Локаторы и ожидания</h3>
+<p>В Page Object используются устойчивые идентификаторы: <code>#userName</code>, <code>#userEmail</code>, <code>#currentAddress</code>, <code>#permanentAddress</code>, <code>#submit</code>, <code>#output</code>, <code>#confirmButton</code>, <code>#promtButton</code>, <code>#confirmResult</code>, <code>#promptResult</code>, <code>#sliderValue</code>, <code>#draggable</code> и <code>#droppable</code>. Для Slider используется CSS-селектор <code>input[type='range']</code>. Метод <code>visible</code> ожидает видимость, метод <code>click</code> дополнительно ожидает кликабельность, метод <code>type</code> очищает поле после ожидания видимости.</p>
+
+<h2>3. Ссылки и версия исходного кода</h2>
+<table>
+    <tr><th>Объект</th><th>Ссылка или значение</th></tr>
+    <tr><td>Репозиторий</td><td><a href="https://github.com/thunderkite/allure">https://github.com/thunderkite/allure</a></td></tr>
+    <tr><td>Feature-ветка</td><td><a href="https://github.com/thunderkite/allure/tree/feature/student_demoqa_allure">feature/student_demoqa_allure</a></td></tr>
+    <tr><td>Pull Request</td><td>Фактический PR в репозитории не создан. Рабочая ссылка для создания PR: <a href="https://github.com/thunderkite/allure/compare/main...feature/student_demoqa_allure?expand=1">сравнить feature/student_demoqa_allure с main</a>.</td></tr>
+    <tr><td>Последний коммит</td><td><code>3cea6dcb03af45810510fa4dec650ad98eee0809</code> — «Исправить вызов JavaScript в странице Slider».</td></tr>
+</table>
+
+<h2>4. Результаты запуска и скриншоты</h2>
+<p>Полный запуск командой <code>. mvnw.cmd clean test</code> (без сокращения набора) выполнил 18 тестов: 12 пройдено, 6 завершились ошибкой. Ошибки воспроизводятся в Slider и Drag and Drop. Отдельный стабильный набор Text Box и Alerts в Chrome выполнен успешно: 4 теста, 0 ошибок.</p>
+<figure><img src="screenshots/mvn-test-success.png" alt="Успешный запуск стабильного набора Maven"><figcaption>Успешный Maven-запуск стабильных сценариев Text Box и Alerts: 4/4. Это не подменяет результат полного кросс-браузерного набора.</figcaption></figure>
+<figure><img src="screenshots/surefire-reports.png" alt="Surefire reports"><figcaption>Страница <code>target/surefire-reports</code> после успешного стабильного набора.</figcaption></figure>
+<figure><img src="screenshots/allure-dashboard.png" alt="Allure Dashboard"><figcaption>Allure Dashboard полного кросс-браузерного запуска: 18 тестов, 66,66% успешных, 6 дефектов.</figcaption></figure>
+<figure><img src="screenshots/allure-suites.png" alt="Allure Suites"><figcaption>Allure Suites: suite DemoQA Cross Browser и распределение результатов.</figcaption></figure>
+<figure><img src="screenshots/allure-behaviors.png" alt="Allure Behaviors"><figcaption>Allure Behaviors: Elements, Alerts, Frame &amp; Windows, Widgets and Interactions.</figcaption></figure>
+<figure><img src="screenshots/allure-failed-card.png" alt="Allure failed test card"><figcaption>Карточка упавшего сценария Widgets and Interactions. При падении код прикладывает screenshot и исходный HTML страницы.</figcaption></figure>
+<figure><img src="screenshots/allure-environment.png" alt="Allure Environment"><figcaption>Environment-блок Allure Dashboard: Windows 11, JDK 26.0.2.1, Selenium 4.22.0 и TestNG 7.10.2. В версии Allure 2.20.1 отдельный маршрут Environment не отображается, поэтому показан штатный блок Dashboard.</figcaption></figure>
+<p>Статический Allure-отчет после генерации доступен по адресу <a href="../target/site/allure-maven-plugin/index.html">target/site/allure-maven-plugin/index.html</a>. Исходные Allure-результаты находятся в <a href="../target/allure-results/">target/allure-results</a>, Surefire-отчеты — в <a href="../target/surefire-reports/">target/surefire-reports</a>.</p>
+
+<h2>5. Выводы и предложения</h2>
+<p>Базовые сценарии Text Box и Alerts устойчивы: они используют идентификаторы элементов, явные ожидания и изолированный WebDriver на каждый тестовый метод. Полный набор воспроизводим частично: Slider и Drag and Drop стабильно падают с одинаковыми результатами во всех трех потоках, поэтому проблема относится к реализации взаимодействия, а не к случайному отличию браузеров.</p>
+<p>Существенное отличие среды заключается в доступности браузеров: Chrome и Edge обнаружены в системе, Firefox отсутствует. Для полноценного сравнения браузеров нужно установить Firefox и повторить запуск в одинаковом окружении. Кроме того, Selenium 4.22.0 предупреждает об отсутствии CDP-реализации для Chromium 154; следует обновить Selenium до версии с поддержкой актуального CDP.</p>
+<ul>
+    <li>Для Slider проверять фактическое изменение значения после JavaScript-вызова и использовать событие <code>input</code> вместе с <code>change</code> либо штатное управление клавишами.</li>
+    <li>Для Drag and Drop заменить хрупкий одинарный <code>Actions.dragAndDrop</code> на последовательность moveToElement, clickAndHold, moveToElement с offset и release; после действия ждать текст <code>Dropped!</code>, а не только видимость цели.</li>
+    <li>Сохранять локаторы преимущественно по id; CSS применять только для элементов без стабильного id. При изменении DOM добавлять data-testid на стороне приложения.</li>
+    <li>Оставить параллельный запуск по браузерам, но не записывать общий <code>environment.properties</code> из нескольких потоков без синхронизации: сейчас значение browser может соответствовать последнему записавшему процессу.</li>
+    <li>Расширить Allure-шаги так, чтобы в них явно отражались открытие страницы, входные данные без секретов, действие, фактическое значение и условие ожидания. Для падений сохранять screenshot и page source, что уже реализовано.</li>
+</ul>
+</body>
+</html>
